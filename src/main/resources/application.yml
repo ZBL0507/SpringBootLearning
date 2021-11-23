@@ -9,5 +9,3 @@ spring:
 logging:
   level:
     com.zbl.springboot.dao: debug
-  pattern:
-    console: "%d{yyyy-MM-dd} [%thread] [%-5level] %logger{50} - %line - %msg%n"
