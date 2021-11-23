@@ -1,6 +1,6 @@
 # SpringBootLearning
 ## 简介
-This is a SpringBoot learning project
+这是作者的一个SpringBoot学习项目，集成了Redis作为缓存中间件，集成MySQL作为数据存储层，旨在对SpringBoot的学习和其他组件的集成
 
 ## 需要
 * 基于 `JDK1.8`, `SpringBoot 2.5.6`
