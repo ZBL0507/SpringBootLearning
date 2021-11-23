@@ -11,14 +11,14 @@ import org.springframework.data.redis.core.RedisTemplate;
  * @since 2021/11/18 10:16
  */
 @SpringBootTest
-public class RedisTemplateTest {
+class RedisTemplateTest {
 
     @Autowired
     private RedisTemplate redisTemplate;
 
 
     @Test
-    public void testRedisConnect() {
+    void testRedisConnect() {
         /*redisTemplate.opsForValue().set("zzz", "zzz的缓存value");*/
         /*redisTemplate.opsForValue().set("bbb", "bbb的缓存value");*/
         /*redisTemplate.opsForValue().set("ccc", "ccc的缓存value");*/

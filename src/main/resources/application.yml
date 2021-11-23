@@ -6,3 +6,8 @@ spring:
     host: 127.0.0.1
     port: 6379
 
+logging:
+  level:
+    com.zbl.springboot.dao: debug
+  pattern:
+    console: "%d{yyyy-MM-dd} [%thread] [%-5level] %logger{50} - %line - %msg%n"
