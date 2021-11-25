@@ -23,6 +23,11 @@ public class User {
     private Long id;
 
     /**
+     * 姓名
+     */
+    private String name;
+
+    /**
      * 性别: 男，女，未知
      */
     private String sex;
