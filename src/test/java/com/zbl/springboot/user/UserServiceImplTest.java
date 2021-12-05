@@ -54,7 +54,7 @@ class UserServiceImplTest {
     @Test
     void testCreateBatch() {
         Collection<User> userList = new ArrayList<>();
-        for (int i = 0; i < 1001; i++) {
+        for (int i = 0; i < 1000; i++) {
             User user = new User();
             user.setName(MyRandomUtil.randomName());
             user.setAge(MyRandomUtil.randomAge());

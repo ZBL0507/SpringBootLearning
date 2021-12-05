@@ -29,7 +29,7 @@ public class UserMapperTest {
 
     @Test
     void testUpdate() {
-        User user = userMapper.selectById(3);
+        User user = userMapper.selectById(1);
         user.setAge(25);
         user.setGmtModify(new Date());
         userMapper.updateById(user);
