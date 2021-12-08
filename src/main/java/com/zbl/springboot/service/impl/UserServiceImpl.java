@@ -67,6 +67,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user.getId() == null || user.getId() <= 0) {
             throw new RuntimeException("please key in correct user id");
         }
+        //清除缓存
+        userCacheUtil.delUser(user.getId());
+
         user.setGmtModify(new Date());
         int count = userMapper.updateById(user);
         return count > 0;

@@ -42,6 +42,10 @@ public class ApiResult<T> implements Serializable {
         return new ApiResult<>("5000", data, "失败");
     }
 
+    public static <T> ApiResult<T> fail(String message) {
+        return new ApiResult<>("5000", null, message);
+    }
+
     public static <T> ApiResult<T> fail(String code, T data) {
         return new ApiResult<>(code, data, "失败");
     }
