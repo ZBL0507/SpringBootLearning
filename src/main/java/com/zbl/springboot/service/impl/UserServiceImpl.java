@@ -8,6 +8,7 @@ import com.zbl.springboot.dto.PageResult;
 import com.zbl.springboot.dto.PageSearch;
 import com.zbl.springboot.po.User;
 import com.zbl.springboot.service.UserService;
+import com.zbl.springboot.util.UserCacheUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @SuppressWarnings("all")
     @Autowired
     private UserService userService;
+
+    @SuppressWarnings("all")
+    @Autowired
+    private UserCacheUtil userCacheUtil;
 
     private UserMapper userMapper;
 
@@ -72,7 +77,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userId == null || userId <= 0) {
             throw new IllegalArgumentException("please key in correct user id");
         }
-        return userMapper.selectById(userId);
+
+        User user = userCacheUtil.getUser(userId.longValue());
+        if (null != user) {
+            log.info("从缓存中获得user数据:{}", userId);
+            return user;
+        }
+        user = userMapper.selectById(userId);
+        userCacheUtil.saveUser(user);
+        return user;
     }
 
     @Override

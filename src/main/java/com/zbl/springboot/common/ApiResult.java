@@ -20,15 +20,7 @@ public class ApiResult<T> implements Serializable {
     //code of return like http status
     private String code;
 
-    public ApiResult() {
-    }
-
-    public ApiResult(String code, T data) {
-        this.code = code;
-        this.data = data;
-    }
-
-    public ApiResult(String code, T data, String message) {
+    private ApiResult(String code, T data, String message) {
         this.code = code;
         this.data = data;
         this.message = message;
@@ -42,7 +34,19 @@ public class ApiResult<T> implements Serializable {
         return new ApiResult<>(code, data, "成功");
     }
 
+    public static <T> ApiResult<T> success(String code, T data, String message) {
+        return new ApiResult<>(code, data, message);
+    }
+
     public static <T> ApiResult<T> fail(T data) {
         return new ApiResult<>("5000", data, "失败");
+    }
+
+    public static <T> ApiResult<T> fail(String code, T data) {
+        return new ApiResult<>(code, data, "失败");
+    }
+
+    public static <T> ApiResult<T> fail(String code, T data, String message) {
+        return new ApiResult<>(code, data, message);
     }
 }
