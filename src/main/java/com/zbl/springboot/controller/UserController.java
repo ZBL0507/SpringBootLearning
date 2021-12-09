@@ -6,10 +6,7 @@ import com.zbl.springboot.po.User;
 import com.zbl.springboot.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author zbl
@@ -25,14 +22,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/{userId}")
+    @GetMapping("/{userId}")
     public ApiResult<User> getUser(@PathVariable("userId") Integer userId) {
         log.info("获取用户详情userId:{}", userId);
         User user = userService.get(userId);
         return ApiResult.success(user);
     }
 
-    @RequestMapping("/update")
+    @PostMapping("/update")
     public ApiResult<Boolean> update(@RequestBody User user) {
         try {
             log.info("更新用户:{}", JSON.toJSONString(user));
@@ -53,4 +50,9 @@ public class UserController {
     }
 
 
+    @GetMapping("/login")
+    public ApiResult<Boolean> getUser() {
+        log.info("lkjsdf");
+        return ApiResult.success(true);
+    }
 }

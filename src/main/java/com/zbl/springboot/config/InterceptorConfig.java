@@ -1,5 +1,6 @@
 package com.zbl.springboot.config;
 
+import com.zbl.springboot.interceptor.LoginInterceptor;
 import com.zbl.springboot.interceptor.RequestCountRecordInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -23,5 +24,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(requestCountRecordInterceptor)
                 .addPathPatterns("/**") //添加拦截路径
                 .excludePathPatterns("/static/**", "/css/**"); //添加放行路径
+
+        registry.addInterceptor(new LoginInterceptor())
+                .addPathPatterns("/**");
+//                .excludePathPatterns("/user/login");
     }
 }
