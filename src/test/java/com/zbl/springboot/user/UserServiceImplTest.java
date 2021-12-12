@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author zbl
@@ -27,7 +29,7 @@ class UserServiceImplTest {
     private UserService userService;
 
     @Test
-    //@Transactional 加上事务注解，测试完成数据会回滚，不会写入数据库
+        //@Transactional 加上事务注解，测试完成数据会回滚，不会写入数据库
     void testInsert() {
         User user = new User();
         user.setName(MyRandomUtil.randomName());
@@ -53,8 +55,9 @@ class UserServiceImplTest {
 
     @Test
     void testCreateBatch() {
+        log.info(Thread.currentThread().getName() + " 线程启动。。。");
         Collection<User> userList = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10_0000; i++) {
             User user = new User();
             user.setName(MyRandomUtil.randomName());
             user.setAge(MyRandomUtil.randomAge());
@@ -72,5 +75,20 @@ class UserServiceImplTest {
         PageSearch pageSearch = new PageSearch();
         pageSearch.setPageIndex(2);
         PageResult<User> page = userService.getPage(pageSearch);
+    }
+
+    @Test
+    public void testMutiThreadInsert() {
+        long time = System.currentTimeMillis();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        executorService.submit(this::testCreateBatch);
+        executorService.submit(this::testCreateBatch);
+        executorService.submit(this::testCreateBatch);
+        executorService.submit(this::testCreateBatch);
+
+        long useTime = System.currentTimeMillis() - time;
+        log.info("useTime: {}", useTime);
+
     }
 }

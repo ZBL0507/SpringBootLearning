@@ -12,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -63,7 +64,8 @@ public class LoginInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-            LoginUserDTO loginUserDTO = JSON.parseObject(userValue, LoginUserDTO.class);
+            String decode = URLDecoder.decode(userValue, "utf-8");
+            LoginUserDTO loginUserDTO = JSON.parseObject(decode, LoginUserDTO.class);
             if (null == loginUserDTO
                     || loginUserDTO.getId() < 0
                     || loginUserDTO.getExpire() < System.currentTimeMillis()) {
