@@ -22,6 +22,7 @@ public class UserCacheUtil {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @SuppressWarnings("all")
     private ValueOperations valueOperations;
 
     @PostConstruct

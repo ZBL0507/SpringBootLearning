@@ -30,6 +30,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     static {
         noCheckPathList.add("/user/login");
+        noCheckPathList.add("/user/login/code");
     }
 
     @Override

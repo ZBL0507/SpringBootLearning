@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.zbl.springboot.common.ApiResult;
 import com.zbl.springboot.po.User;
 import com.zbl.springboot.service.UserService;
+import com.zbl.springboot.util.LoginCodeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,10 @@ public class UserController {
     @SuppressWarnings("all")
     @Autowired
     private UserService userService;
+
+    @SuppressWarnings("all")
+    @Autowired
+    private LoginCodeUtil loginCodeUtil;
 
     @GetMapping("/{userId}")
     public ApiResult<User> getUser(@PathVariable("userId") Integer userId) {
@@ -55,4 +60,20 @@ public class UserController {
         log.info("lkjsdf");
         return ApiResult.success(true);
     }
+
+    /**
+     * 获取登录验证码
+     *
+     * @return 登录时用的验证码
+     */
+    @GetMapping("/login/code")
+    public ApiResult<String> getLoginCode(Long userId) {
+        if (userId == null) {
+            return ApiResult.fail("userId not permit null");
+        }
+
+        String loginCode = loginCodeUtil.getLoginCode(userId);
+        return ApiResult.success(loginCode);
+    }
+
 }

@@ -61,4 +61,13 @@ public class MyRandomUtil {
     public static String randomSex() {
         return RandomUtil.randomString("男女", 1);
     }
+
+    /**
+     * 生成一个随机的6位数字验证码
+     *
+     * @return 6位数字验证码
+     */
+    public static String randomLoginCode() {
+        return RandomUtil.randomNumbers(6);
+    }
 }
