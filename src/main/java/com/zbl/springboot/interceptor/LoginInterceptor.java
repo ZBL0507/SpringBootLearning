@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSON;
 import com.zbl.springboot.common.ResponseCode;
 import com.zbl.springboot.dto.LoginUserDTO;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
@@ -32,6 +31,8 @@ public class LoginInterceptor implements HandlerInterceptor {
     static {
         noCheckPathList.add("/user/login");
         noCheckPathList.add("/user/login/code");
+        noCheckPathList.add("/error");
+        noCheckPathList.add("/index");
     }
 
     @Override
