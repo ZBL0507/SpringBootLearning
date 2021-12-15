@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -101,6 +102,25 @@ public class UserController {
         String loginCode = loginCodeUtil.getLoginCode(userId);
         log.info("获取登录验证码userid:{}, loginCode:{}", userId, loginCode);
         return ApiResult.success(loginCode);
+    }
+
+
+    /**
+     * 退出登录
+     *
+     * @return 退出状态
+     */
+    @PostMapping("/logout")
+    public ApiResult<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            }
+        }
+        return ApiResult.success("退出登录成功");
     }
 
 }
