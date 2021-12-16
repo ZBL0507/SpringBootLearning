@@ -1,12 +1,14 @@
 package com.zbl.springboot.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.nimbusds.jose.JOSEException;
 import com.zbl.springboot.common.ApiResult;
 import com.zbl.springboot.dto.LoginParaDTO;
 import com.zbl.springboot.dto.LoginUserDTO;
 import com.zbl.springboot.po.User;
 import com.zbl.springboot.service.UserService;
 import com.zbl.springboot.util.LoginCodeUtil;
+import com.zbl.springboot.util.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ import java.net.URLEncoder;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    public static final String userEncryptKey = "welkhjoihkjsdhf";
 
     @SuppressWarnings("all")
     @Autowired
@@ -70,7 +74,7 @@ public class UserController {
      * @return 成功登录则返回true，否则返回false
      */
     @PostMapping("/login")
-    public ApiResult<Boolean> getUser(@RequestBody LoginParaDTO loginParaDTO, HttpServletResponse response) throws UnsupportedEncodingException {
+    public ApiResult<Boolean> login(@RequestBody LoginParaDTO loginParaDTO, HttpServletResponse response) throws UnsupportedEncodingException, JOSEException {
         boolean isSuccess = loginCodeUtil.checkLoginCode(loginParaDTO.getUserId(), loginParaDTO.getLoginCode());
         if (isSuccess) {
             LoginUserDTO loginUserDTO = new LoginUserDTO();
@@ -82,6 +86,7 @@ public class UserController {
             cookie.setPath("/");
             cookie.setMaxAge(24 * 60 * 60);
             response.addCookie(cookie);
+            response.addHeader("token", TokenUtil.generateToken(loginUserDTO, userEncryptKey));
             return ApiResult.success(true);
         }
         return ApiResult.fail(false);

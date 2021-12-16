@@ -2,8 +2,12 @@ package com.zbl.springboot.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.nimbusds.jose.JOSEException;
 import com.zbl.springboot.common.ResponseCode;
+import com.zbl.springboot.controller.UserController;
 import com.zbl.springboot.dto.LoginUserDTO;
+import com.zbl.springboot.util.TokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.ServletOutputStream;
@@ -11,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,6 +27,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 2021/12/9 10:59
  */
+@Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
 
     private static final ArrayList<String> noCheckPathList = new ArrayList<>();
@@ -37,47 +43,58 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //用于记录用户的登录凭证
-        String userValue = "";
-
-        //获取请求路径
         String requestURI = request.getRequestURI();
-        //如果是需要登录才能访问的路径
-        if (!noCheckPathList.contains(requestURI)) {
-            //从cookie中判断是否含有登录凭证
-            Cookie[] cookies = request.getCookies();
-            if (null != cookies) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals(loginCookieName)) {
-                        userValue = cookie.getValue();
-                    }
-                }
-            }
+        log.info("LoginInterceptor_requestURI:{}", requestURI);
+        if (noCheckPathList.contains(requestURI)) {
+            return true;
+        }
 
-            //如果cookie中没有，则从请求参数中获取token
-            if (StrUtil.isEmpty(userValue)) {
-                userValue = request.getParameter("token");
-            }
+        LoginUserDTO loginUserDTO = deduceLoginUserFromToken(request, response);
+        if (null == loginUserDTO) {
+            loginUserDTO = deduceLoginUserFromCookies(request, response);
+        }
 
-            //
-            if (StrUtil.isEmpty(userValue)) {
-                returnErrorResponse(response, ResponseCode.session_timeout.toJsonStr());
-                return false;
-            }
-
-            String decode = URLDecoder.decode(userValue, "utf-8");
-            LoginUserDTO loginUserDTO = JSON.parseObject(decode, LoginUserDTO.class);
-            if (null == loginUserDTO
-                    || loginUserDTO.getId() < 0
-                    || loginUserDTO.getExpire() < System.currentTimeMillis()) {
-                returnErrorResponse(response, ResponseCode.session_timeout.toJsonStr());
-                return false;
-            }
+        if (null == loginUserDTO
+                || loginUserDTO.getId() < 0
+                || loginUserDTO.getExpire() < System.currentTimeMillis()) {
+            returnErrorResponse(response, ResponseCode.session_timeout.toJsonStr());
+            return false;
         }
 
         return true;
     }
 
+    private LoginUserDTO deduceLoginUserFromToken(HttpServletRequest request, HttpServletResponse response) throws JOSEException {
+        //用于记录用户的登录凭证
+        String token = request.getParameter("token");
+        if (StrUtil.isEmpty(token)) {
+            return null;
+        }
+
+        return TokenUtil.parseToken(token, UserController.userEncryptKey);
+    }
+
+    private LoginUserDTO deduceLoginUserFromCookies(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        //用于记录用户的登录凭证
+        String userValue = "";
+
+        //从cookie中判断是否含有登录凭证
+        Cookie[] cookies = request.getCookies();
+        if (null != cookies) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(loginCookieName)) {
+                    userValue = cookie.getValue();
+                }
+            }
+        }
+
+        if (StrUtil.isEmpty(userValue)) {
+            return null;
+        }
+
+        String decode = URLDecoder.decode(userValue, "utf-8");
+        return JSON.parseObject(decode, LoginUserDTO.class);
+    }
 
     private void returnErrorResponse(HttpServletResponse response, String result) throws IOException {
         ServletOutputStream outputStream = null;
