@@ -13,6 +13,15 @@ import java.util.Collection;
  * @since 2021/11/25 10:47
  */
 public interface UserService extends IService<User> {
+
+    /**
+     * 根据用户id 判断是否存在该用户
+     *
+     * @param userId 用户id
+     * @return 如果存在就返回true，否则返回false
+     */
+    boolean exist(Long userId);
+
     /**
      * 新建用户
      *

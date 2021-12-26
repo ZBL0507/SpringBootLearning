@@ -61,7 +61,7 @@ public class LoginCodeUtil {
         log.info("校验验证码：userId:{}, loginCode:{}", userId, loginCode);
         String redisKey = user_login_code + userId;
         String redisCode = (String) valueOperations.get(redisKey);
-        log.info("服务端保存的验证码:{}", loginCode);
+        log.info("服务端保存的验证码:{}", redisCode);
         if (StrUtil.isEmpty(redisCode)) {
             return false;
         }

@@ -33,10 +33,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private UserCacheUtil userCacheUtil;
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
+    }
+
+    @Override
+    public boolean exist(Long userId) {
+        User user = userMapper.selectById(userId);
+        return user != null;
     }
 
     @Override

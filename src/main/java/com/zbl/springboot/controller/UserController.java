@@ -75,6 +75,12 @@ public class UserController {
      */
     @PostMapping("/login")
     public ApiResult<Boolean> login(@RequestBody LoginParaDTO loginParaDTO, HttpServletResponse response) throws UnsupportedEncodingException, JOSEException {
+        //先检查该用户是否存在
+        boolean exist = userService.exist(loginParaDTO.getUserId());
+        if (!exist) {
+            log.info("该用户不存在:{}", JSON.toJSONString(loginParaDTO));
+            return ApiResult.fail("不存在该用户！");
+        }
         boolean isSuccess = loginCodeUtil.checkLoginCode(loginParaDTO.getUserId(), loginParaDTO.getLoginCode());
         if (isSuccess) {
             LoginUserDTO loginUserDTO = new LoginUserDTO();

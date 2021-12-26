@@ -91,4 +91,10 @@ class UserServiceImplTest {
         log.info("useTime: {}", useTime);
 
     }
+
+    @Test
+    public void testExist() {
+        boolean exist = userService.exist(23L);
+        log.info("该用户是否存在:{}", exist);
+    }
 }
