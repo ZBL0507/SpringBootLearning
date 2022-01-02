@@ -1,6 +1,8 @@
 package com.zbl.springboot.httptest.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,4 +47,21 @@ public class MyhttpTest {
         map.put("age", age);
         return map;
     }
+
+    @PostMapping(value = "/post-timeout")
+    public Map testPost(HttpServletRequest request, @RequestBody Map<String, String> body) {
+        log.info("testPost body is : {}", body.toString());
+
+        String requestURI = request.getRequestURI();
+        log.info("testPost requestURI is : {}", requestURI);
+
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return body;
+    }
+
 }
