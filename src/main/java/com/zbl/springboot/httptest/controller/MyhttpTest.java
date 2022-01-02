@@ -35,4 +35,14 @@ public class MyhttpTest {
         map.put("age", "23");
         return map;
     }
+
+    @RequestMapping("/get-with-param")
+    public Map testGet(HttpServletRequest request, String name, String age) {
+        log.info("request uri is:{}", request.getRequestURI());
+        log.info("request param is name:{}, age:{}", name, age);
+        Map<String, String> map = new HashMap<>();
+        map.put("name", name);
+        map.put("age", age);
+        return map;
+    }
 }
