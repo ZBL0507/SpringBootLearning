@@ -26,7 +26,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/static/**", "/css/**"); //添加放行路径
 
         registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/**");
-//                .excludePathPatterns("/user/login");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/http-test/**");
     }
 }
