@@ -1,12 +1,11 @@
 package com.zbl.springboot.httptest.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/http-test")
 public class MyhttpTest {
 
-    @RequestMapping("/get")
+    @GetMapping("/get")
     public Map testGet(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.info("请求的uri:{}", requestURI);
@@ -38,13 +37,21 @@ public class MyhttpTest {
         return map;
     }
 
-    @RequestMapping("/get-with-param")
+    @GetMapping("/get-with-param")
     public Map testGet(HttpServletRequest request, String name, String age) {
         log.info("request uri is:{}", request.getRequestURI());
         log.info("request param is name:{}, age:{}", name, age);
         Map<String, String> map = new HashMap<>();
         map.put("name", name);
         map.put("age", age);
+
+        JSONObject jsonObject = new JSONObject();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            jsonObject.put(headerNames.nextElement(), request.getHeader(headerNames.nextElement()));
+        }
+        map.put("请求时的请求头", jsonObject.toJSONString());
+
         return map;
     }
 
