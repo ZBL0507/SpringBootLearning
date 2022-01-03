@@ -1,11 +1,14 @@
 package com.zbl.springboot.httptest.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +53,8 @@ public class MyhttpTest {
         JSONObject jsonObject = new JSONObject();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            jsonObject.put(headerNames.nextElement(), request.getHeader(headerNames.nextElement()));
+            String element = headerNames.nextElement();
+            jsonObject.put(element, request.getHeader(element));
         }
         map.put("请求时的请求头", jsonObject.toJSONString());
 
@@ -58,11 +62,24 @@ public class MyhttpTest {
     }
 
     @PostMapping(value = "/post-timeout")
-    public Map testPost(HttpServletRequest request, @RequestBody Map<String, String> body) {
+    public Map testPost(HttpServletRequest request, @RequestParam Map<String, String> params, @RequestBody Map<String, String> body) {
         log.info("testPost body is : {}", body.toString());
+        log.info("testPost params : {}", params.toString());
 
         String requestURI = request.getRequestURI();
         log.info("testPost requestURI is : {}", requestURI);
+
+        JSONObject jsonObject = new JSONObject();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String element = headerNames.nextElement();
+            jsonObject.put(URLDecoder.decode(element, StandardCharsets.UTF_8),
+                    URLDecoder.decode(request.getHeader(element), StandardCharsets.UTF_8));
+        }
+        log.info("testPost请求时的请求头:{}", jsonObject.toJSONString());
+        body.put("请求时的请求头", jsonObject.toJSONString());
+
+        body.put("请求参数", JSON.toJSONString(params));
 
         try {
             TimeUnit.SECONDS.sleep(3);
