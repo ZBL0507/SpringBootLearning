@@ -9,6 +9,8 @@ import com.zbl.springboot.po.User;
 import com.zbl.springboot.service.UserService;
 import com.zbl.springboot.util.LoginCodeUtil;
 import com.zbl.springboot.util.TokenUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ import java.net.URLEncoder;
  * @version 1.0
  * @since 2021/11/24 18:01
  */
+@Api(description = "用户相关操作")
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -39,6 +42,7 @@ public class UserController {
     @Autowired
     private LoginCodeUtil loginCodeUtil;
 
+    @ApiOperation("获取用户详情")
     @GetMapping("/{userId}")
     public ApiResult<User> getUser(@PathVariable("userId") Integer userId) {
         log.info("获取用户详情userId:{}", userId);
@@ -46,6 +50,7 @@ public class UserController {
         return ApiResult.success(user);
     }
 
+    @ApiOperation("更新用户")
     @PostMapping("/update")
     public ApiResult<Boolean> update(@RequestBody User user) {
         try {
@@ -73,6 +78,7 @@ public class UserController {
      * @param loginParaDTO 登录请求参数
      * @return 成功登录则返回true，否则返回false
      */
+    @ApiOperation("用户登录接口")
     @PostMapping("/login")
     public ApiResult<Boolean> login(@RequestBody LoginParaDTO loginParaDTO, HttpServletResponse response) throws UnsupportedEncodingException, JOSEException {
         //先检查该用户是否存在
@@ -103,6 +109,7 @@ public class UserController {
      *
      * @return 登录时用的验证码
      */
+    @ApiOperation("获取用户登录验证码接口")
     @GetMapping("/login/code")
     public ApiResult<String> getLoginCode(Long userId) {
         if (userId == null) {
@@ -121,6 +128,7 @@ public class UserController {
      *
      * @return 退出状态
      */
+    @ApiOperation("用户退出登录接口")
     @PostMapping("/logout")
     public ApiResult<String> logout(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();

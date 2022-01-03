@@ -1,6 +1,7 @@
 package com.zbl.springboot.httptest.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since 2022/1/2 12:27
  */
+@Api(description = "HttpClient的测试")
 @Slf4j
 @RestController
 @RequestMapping("/http-test")
