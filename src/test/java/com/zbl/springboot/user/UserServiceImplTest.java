@@ -57,7 +57,7 @@ class UserServiceImplTest {
     void testCreateBatch() {
         log.info(Thread.currentThread().getName() + " 线程启动。。。");
         Collection<User> userList = new ArrayList<>();
-        for (int i = 0; i < 10_0000; i++) {
+        for (int i = 0; i < 100_0000; i++) {
             User user = new User();
             user.setName(MyRandomUtil.randomName());
             user.setAge(MyRandomUtil.randomAge());
