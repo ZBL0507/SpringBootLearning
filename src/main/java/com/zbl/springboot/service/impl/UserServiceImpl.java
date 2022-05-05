@@ -64,7 +64,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         long startTime = System.currentTimeMillis();
         boolean res = userService.saveBatch(users);
-        log.info("批量插入耗时：{}", System.currentTimeMillis() - startTime);
+        log.info(Thread.currentThread().getName() + " 批量插入耗时：{}", System.currentTimeMillis() - startTime);
         return res;
     }
 

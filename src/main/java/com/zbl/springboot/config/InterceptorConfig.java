@@ -1,10 +1,8 @@
 package com.zbl.springboot.config;
 
-import com.zbl.springboot.interceptor.LoginInterceptor;
 import com.zbl.springboot.interceptor.RequestCountRecordInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -19,7 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Autowired
     private RequestCountRecordInterceptor requestCountRecordInterceptor;
 
-    @Override
+    /*@Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(requestCountRecordInterceptor)
                 .addPathPatterns("/**") //添加拦截路径
@@ -32,5 +30,5 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/v3/**");
 
-    }
+    }*/
 }

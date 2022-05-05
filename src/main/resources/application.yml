@@ -12,6 +12,6 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-logging:
-  level:
-    com.zbl.springboot.dao: debug
+#logging:
+#  level:
+#    com.zbl.springboot.dao: debug

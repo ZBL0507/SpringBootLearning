@@ -8,6 +8,7 @@ import com.zbl.springboot.dto.LoginUserDTO;
 import com.zbl.springboot.po.User;
 import com.zbl.springboot.service.UserService;
 import com.zbl.springboot.util.LoginCodeUtil;
+import com.zbl.springboot.util.MyRandomUtil;
 import com.zbl.springboot.util.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author zbl
@@ -140,6 +143,31 @@ public class UserController {
             }
         }
         return ApiResult.success("退出登录成功");
+    }
+
+
+    @GetMapping("/batchInsert")
+    public String batchInsert() {
+        new Thread(this::batchAdd).start();
+        new Thread(this::batchAdd).start();
+        new Thread(this::batchAdd).start();
+        new Thread(this::batchAdd).start();
+        return "线程启动，后台插入";
+    }
+
+    public void batchAdd() {
+        log.info(Thread.currentThread().getName() + " 线程启动。。。");
+        Collection<User> userList = new ArrayList<>();
+        for (int i = 0; i < 80_0000; i++) {
+            User user = new User();
+            user.setName(MyRandomUtil.randomName());
+            user.setAge(MyRandomUtil.randomAge());
+            user.setSex(MyRandomUtil.randomSex());
+            userList.add(user);
+        }
+
+        boolean batch = userService.createBatch(userList);
+        log.info(Thread.currentThread().getName() + " 批量插入结果：{}", batch);
     }
 
 }
