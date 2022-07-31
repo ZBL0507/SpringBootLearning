@@ -3,6 +3,8 @@ package com.zbl.springboot.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zbl.springboot.annotation.DataMasking;
+import com.zbl.springboot.enumm.DataMaskingFunc;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -26,11 +28,13 @@ public class User implements Serializable {
     /**
      * 姓名
      */
+    @DataMasking(maskFunc = DataMaskingFunc.NO_MASK)
     private String name;
 
     /**
      * 性别: 男，女，未知
      */
+    @DataMasking(maskFunc = DataMaskingFunc.NO_MASK)
     private String sex;
 
     /**

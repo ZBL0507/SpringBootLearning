@@ -1,6 +1,7 @@
 package com.zbl.springboot.util;
 
 import com.zbl.springboot.po.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since 2021/12/8 11:53
  */
+@Slf4j
 @Component
 public class UserCacheUtil {
     private static final String user_cache_prefix = "user_cache_prefix_";
@@ -37,7 +39,12 @@ public class UserCacheUtil {
      * @return 这个id对应的用户数据，如果缓存中没有则返回null
      */
     public User getUser(Long userId) {
-        return (User) valueOperations.get(user_cache_prefix + userId);
+        try {
+            return (User) valueOperations.get(user_cache_prefix + userId);
+        } catch (Exception e) {
+            log.error("getUser from cache error... ", e);
+            return null;
+        }
     }
 
     /**
@@ -60,7 +67,11 @@ public class UserCacheUtil {
     }
 
     public void saveUser(User user) {
-        saveUser(user, 1L, TimeUnit.HOURS);
+        try {
+            saveUser(user, 1L, TimeUnit.HOURS);
+        } catch (Exception e) {
+            log.error("save user to cache error... ", e);
+        }
     }
 
     /**
