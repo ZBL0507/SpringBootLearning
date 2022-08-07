@@ -34,7 +34,7 @@ public class User implements Serializable {
     /**
      * 性别: 男，女，未知
      */
-    @DataMasking(maskFunc = DataMaskingFunc.NO_MASK)
+    @DataMasking(maskFunc = DataMaskingFunc.ALL_MASK)
     private String sex;
 
     /**
