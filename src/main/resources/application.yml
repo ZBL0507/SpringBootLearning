@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8090
 
 spring:
   redis:
@@ -15,3 +15,9 @@ spring:
 #logging:
 #  level:
 #    com.zbl.springboot.dao: debug
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: default_producer_001
+
