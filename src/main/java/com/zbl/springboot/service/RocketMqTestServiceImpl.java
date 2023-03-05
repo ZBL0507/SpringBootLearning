@@ -1,6 +1,7 @@
 package com.zbl.springboot.service;
 
 import com.alibaba.fastjson.JSON;
+import com.zbl.springboot.rocketmq.RocketMqProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class RocketMqTestServiceImpl {
 
     @Resource
     private RocketMQTemplate rocketMQTemplate;
+
+    @Resource
+    private RocketMqProducer rocketMqProducer;
 
     public void testSendDeMq(Map<String, Object> messageBody, boolean needDelay) {
         messageBody.put("producerTime", System.currentTimeMillis());
@@ -57,6 +61,21 @@ public class RocketMqTestServiceImpl {
                 30000L,
                 3);
         log.info("RocketMqTestServiceImpl testSendDelayMq done...");
+    }
+
+
+    public void testSendDeMqWithSpringWay(Map<String, Object> messageBody) {
+        messageBody.put("producerTime", System.currentTimeMillis());
+        messageBody.put("age", 15);
+        messageBody.put("name", "ZhangSan");
+        rocketMqProducer.send(messageBody);
+    }
+
+    public void testSendDeMqWithSpringWay(Map<String, Object> messageBody, int delayLevel) {
+        messageBody.put("producerTime", System.currentTimeMillis());
+        messageBody.put("age", 15);
+        messageBody.put("name", "ZhangSan");
+        rocketMqProducer.send(messageBody, delayLevel);
     }
 
 }

@@ -1,8 +1,10 @@
 package com.zbl.springboot.controller;
 
+import com.zbl.springboot.common.ApiResult;
 import com.zbl.springboot.service.RocketMqTestServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,5 +32,12 @@ public class RocketMqTestController {
     public Object testSendDelayMq() {
         rocketMqTestService.testSendDelayMq(new HashMap<>());
         return "testSendDelayMq done...";
+    }
+
+    @GetMapping("/testSendDeMqWithSpringWay")
+    public ApiResult<String> testSendDeMqWithSpringWay(@RequestParam("delayLevel") int delayLevel) {
+        log.info("testSendDeMqWithSpringWay delayLevel:{}", delayLevel);
+        rocketMqTestService.testSendDeMqWithSpringWay(new HashMap<>(), delayLevel);
+        return ApiResult.success("testSendDeMqWithSpringWay");
     }
 }
